@@ -11,7 +11,7 @@
 1. Clone this repositoy:
 
 ```bash
-git clone 
+git clone https://github.com/OuraniosZefs/coding_exercise_todo_app.git
 ```
 2. Install dependencies
 ```bash
