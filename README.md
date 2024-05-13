@@ -29,3 +29,6 @@ npm run dev
 
 2. Editing Taks
 ![alt text](./public/screenshot_edit.png)
+
+3. Error Validation
+![alt text](./public/screenshot_error.png)
