@@ -25,7 +25,7 @@ npm run dev
 
 ## Screenshots
 1. Display
-![alt text](public/screenshot_display.png.png)
+![alt text](./public/screenshot_display.png)
 
 2. Editing Taks
-![alt text](public/screenshot_edit.png.png)
+![alt text](./public/screenshot_edit.png)
