@@ -24,10 +24,10 @@ npm run dev
 ```
 
 ## Screenshots
-1. Display
+1. Display UI
 ![alt text](./public/screenshot_display.png)
 
-2. Editing Taks
+2. Editing Tasks
 ![alt text](./public/screenshot_edit.png)
 
 3. Error Validation
