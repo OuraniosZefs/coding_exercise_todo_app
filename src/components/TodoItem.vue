@@ -1,9 +1,9 @@
 <template>
   <div>
-    <table style="width: 100%;">
+    <table style="width: 100%;" class="my-2">
       <tr>
         <td style="width: 8%;">
-          <input type="checkbox" v-model="task.completed" @change="markAsComplete(index)" class="ml-2" style="transform: scale(1.5);" />
+          <input type="checkbox" v-model="task.completed" @change="markAsComplete(index)" class="ml-3" style="transform: scale(1.5);" />
         </td>
         <td class="bg-blue-200 rounded-lg p-1 ps-4">
           <label :class="{ 'line-through': task.completed }">
@@ -26,13 +26,7 @@
               <label for="editedTitle" class="block">Title:</label>
               <input id="editedTitle" v-model="editedTitle" class="w-full px-3 py-2 border rounded-md mb-2" placeholder="Title" />
               <label for="editedDescription" class="block">Description:</label>
-              <input id="editedDescription" v-model="editedDescription" class="w-full px-3 py-2 border rounded-md mb-2" placeholder="Description" />
-              <Alert v-if="showAlert" variant="destructive" class="mb-1">
-                  <AlertTitle>Error</AlertTitle>
-                  <AlertDescription>
-                    Title is a required parameter!
-                  </AlertDescription>
-                </Alert>
+              <input id="editedDescription" v-model="editedDescription" class="w-full px-3 py-2 border rounded-md mb-2" placeholder="Description" />             
               <DialogFooter>               
                 <button @click="saveChanges" class="px-4 py-2 bg-blue-500 text-white rounded-md mr-2">Save</button>
                 <button @click="closeDialog" class="px-4 py-2 bg-gray-300 text-gray-700 rounded-md">Cancel</button>           
@@ -48,7 +42,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue';
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { useToast } from 'vue-toastification'; 
 import {
   Dialog,
   DialogContent,
@@ -69,7 +63,6 @@ const props = defineProps<{
 let dialogOpen = ref(false);
 let editedTitle = props.task.title;
 let editedDescription = props.task.description;
-let showAlert = ref(false);
 
 const openDialog = () => {
   dialogOpen.value = true;
@@ -79,7 +72,6 @@ const closeDialog = () => {
   dialogOpen.value = false;
   editedTitle = ""; 
   editedDescription = ""; 
-  showAlert.value = false; 
 };
 
 const markAsComplete = (index: number) => {
@@ -87,18 +79,33 @@ const markAsComplete = (index: number) => {
 };
 
 const saveChanges = () => {
-  if (editedTitle.trim() !== '') {
+  const toast = useToast(); 
+  let errorMessage = '';
+
+  if (editedTitle.trim() === '') {
+    errorMessage = 'Task title';
+  }
+  if (editedDescription.trim() === '') {
+    if (errorMessage !== '') {
+      errorMessage += ' and ';
+    }
+    errorMessage += 'Task description';
+  }
+
+  if (errorMessage !== '') {
+    errorMessage += ' cannot be empty';
+    toast.error(errorMessage, {
+      timeout: 2000,
+    });
+  } else {
     props.updateTask(props.index, {
       title: editedTitle,
       description: editedDescription,
       completed: props.task.completed,
     });
     closeDialog();
-  } else {
-    showAlert.value = true;
   }
 };
-
 </script>
 
 <style scoped>
