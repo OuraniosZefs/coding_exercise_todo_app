@@ -3,7 +3,7 @@
     <table style="width: 100%;">
       <tr>
         <td style="width: 8%;">
-          <input type="checkbox" v-model="task.completed" @change="markAsComplete" class="ml-2" style="transform: scale(1.5);" />
+          <input type="checkbox" v-model="task.completed" @change="markAsComplete(index)" class="ml-2" style="transform: scale(1.5);" />
         </td>
         <td class="bg-blue-200 rounded-lg p-1 ps-4">
           <label :class="{ 'line-through': task.completed }">
@@ -14,7 +14,7 @@
         <td style="width: 15%; text-align: right;">
           <Dialog :open="dialogOpen">
             <DialogTrigger>
-              <button @click="openDialog" class="px-3 py-1 bg-gray-400 text-white rounded-md ml-2 py-3">Edit</button>
+              <button @click="openDialog" class="px-3 bg-gray-400 text-white rounded-md ml-2 py-3">Edit</button>
             </DialogTrigger>
             <DialogContent>
               <DialogHeader>
@@ -39,7 +39,7 @@
               </DialogFooter>
             </DialogContent>
           </Dialog>
-          <button @click="deleteTask" class="px-2 py-1 bg-red-500 text-white rounded-md ml-2 py-3">Delete</button>
+          <button @click="deleteTask(index)" class="px-2 bg-red-500 text-white rounded-md ml-2 py-3">Delete</button>
         </td>
       </tr>
     </table>
@@ -62,8 +62,9 @@ import {
 const props = defineProps<{
   task: { title: string; description: string; completed: boolean };
   index: number;
-  deleteTask: () => void;
-}>(); 
+  deleteTask: (index: number) => void;
+  updateTask: (index: number, updatedTask: { title: string; description: string; completed: boolean }) => void;
+}>();
 
 let dialogOpen = ref(false);
 let editedTitle = props.task.title;
@@ -81,18 +82,20 @@ const closeDialog = () => {
   showAlert.value = false; 
 };
 
-const markAsComplete = () => {
-  // This is handled in TodoList.vue
+const markAsComplete = (index: number) => {
+  props.updateTask(index, { ...props.task, completed: props.task.completed });
 };
 
 const saveChanges = () => {
   if (editedTitle.trim() !== '') {
-    props.task.title = editedTitle;
-    props.task.description = editedDescription;
+    props.updateTask(props.index, {
+      title: editedTitle,
+      description: editedDescription,
+      completed: props.task.completed,
+    });
     closeDialog();
   } else {
     showAlert.value = true;
-    openDialog();
   }
 };
 

@@ -14,8 +14,15 @@
     </div>
    
     <div class="flex flex-wrap mt-5">
-      <div v-for="(task, index) in tasks" :key="index" class="w-full mb-2">
-        <TodoItem :task="task" :deleteTask="() => deleteTask(index)"/>
+      <div class="w-full mb-2">
+        <TodoItem
+          v-for="(task, index) in tasks"
+          :key="index"
+          :task="task"
+          :index="index"
+          :deleteTask="deleteTask"
+          :updateTask="updateTask"
+        />
       </div>
     </div>
   </div>
@@ -48,6 +55,11 @@ const addTask = () => {
 const deleteTask = (index: number) => {
   tasks.value.splice(index, 1);
   showAlert.value = false;
+  saveTasks();
+};
+
+const updateTask = (index: number, updatedTask: { title: string; description: string; completed: boolean }) => {
+  tasks.value[index] = updatedTask;
   saveTasks();
 };
 
